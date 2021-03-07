@@ -6,6 +6,10 @@
 #ifndef VOIDSOFT_TDSPP_TDSPP_H
 #define VOIDSOFT_TDSPP_TDSPP_H
 
+#include <unistd.h>
+#define INT64_T_DEFINED
+#include "./tds_sysdep_public_port.h"
+
 #include <ctpublic.h>
 #include <string>
 #include <exception>

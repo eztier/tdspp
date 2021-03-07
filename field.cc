@@ -39,9 +39,9 @@ long Field::to_int() {
     return i;
 }
 
-long Field::to_int64() {
+long long Field::to_int64() {
     if (!data) throw TDSPP::Exception("Field::toint: Data not initialized");
-    int64_t i = 0;
+    long long i = 0;
     stringstream ss(data);
     ss >> i;
     return i;

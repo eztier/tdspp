@@ -11,7 +11,8 @@ PREFIX = /usr/local
 
 CC	= g++
 CFLAGS	= -Wall -ansi -fPIC -std=c++11
-STRIPFLAG  = -s
+# STRIPFLAG  = -s
+STRIPFLAG  =
 
 ifdef DEBUG
 CFLAGS    += -DDEBUG -g -std=c++11
@@ -24,12 +25,21 @@ OBJS	= tdspp.o \
 
 INCS	= -I/usr/local/include
 
-LIBS 	= -L/usr/local/lib -lct -shared -ldl
+LIBS 	= -L/usr/local/lib -L/usr/local/opt/freetds/lib -lct -shared -ldl
 
 LIBNAME = tds++
 # LIB 	= libtds++.so.$(MAJOR).$(MINOR)
-LIB = libtds++.so
-SONAME  = libtds++.so
+# LIB = libtds++.so
+# SONAME  = libtds++.so
+
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+  LIB = libtds++.dylib
+  SONAME  = libtds++.dylib
+else
+  LIB = libtds++.so
+  SONAME  = libtds++.so
+endif
 
 .cc.o:	*.hh
 	$(CC) -o $@ $(INCS) -c $(CFLAGS) $<
@@ -40,7 +50,7 @@ $(LIB): $(OBJS)
 all:: $(LIB)
 
 main:: 
-	g++ -g -std=c++11 main.cc -o main -L/usr/local/lib -ltds++ -lct
+	g++ -g -std=c++11 main.cc -o main -L/usr/local/lib -L/usr/local/opt/freetds/lib -ltds++ -lct
 clean::
 	rm -f $(OBJS)
 	rm -f $(LIB)
@@ -50,7 +60,7 @@ install:: $(LIB)
 	@echo "Installing $(SONAME) into $(PREFIX)"
 	@mkdir -p $(PREFIX)/lib/
 	@mkdir -p $(PREFIX)/include/$(LIBNAME)
-	install -o root -g bin -m 644 $(STRIPFLAG) $(LIB) $(PREFIX)/lib/
-	@ln -fs $(PREFIX)/lib/$(LIB) $(PREFIX)/lib/$(SONAME)
-	install -o root -g bin -m 644 *.hh $(PREFIX)/include/$(LIBNAME)
+	install -o root -g bin -m 644 $(STRIPFLAG) $(LIB) $(PREFIX)/lib
+	# @ln -fs $(PREFIX)/lib/$(LIB) $(PREFIX)/lib/$(SONAME)
+	install -o root -g bin -m 644 *.h* $(PREFIX)/include/$(LIBNAME)
 
