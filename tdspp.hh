@@ -8,7 +8,9 @@
 
 #include <unistd.h>
 #define INT64_T_DEFINED
+#ifdef __APPLE__
 #include "./tds_sysdep_public_port.h"
+#endif
 
 #include <ctpublic.h>
 #include <string>
